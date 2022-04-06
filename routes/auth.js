@@ -104,6 +104,24 @@ router.post('/register', registerValidators, async (req, res) => {
     }
 })
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 router.get('/reset', (req, res) => {
     res.render('auth/reset', {
         title: 'Забыли пароль?',
@@ -122,6 +140,7 @@ router.get('/password/:token', async (req, res) => {
             resetTokenExp: {$gt: Date.now()}
         }).lean()
 
+        console.log('AAAAAA',user)
         if (!user) {
             return res.redirect('/auth/login')
         } else {
@@ -147,14 +166,16 @@ router.post('/reset', (req, res) => {
             }
 
             const token = buffer.toString('hex')
-            const user = await User.findOne({email: req.body.email}).lean()
 
-            console.log(user)
+            const user = await User.findOne({email: req.body.email})
+
+
 
             if (user) {
                 user.resetToken = token
                 user.resetTokenExp = Date.now() + 60 * 60 * 1000
                 await user.save()
+                console.log(user)
                 await transporter.sendMail(resetEmail(user.email, token))
                 res.redirect('/auth/login')
             } else {
@@ -173,7 +194,7 @@ router.post('/password', async (req, res) => {
             _id: req.body.userId,
             resetToken: req.body.token,
             resetTokenExp: {$gt: Date.now()}
-        }).lean()
+        })
 
         if (user) {
             user.password = await bcrypt.hash(req.body.password, 10)

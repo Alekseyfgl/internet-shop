@@ -17,8 +17,8 @@ exports.registerValidators = [
                 console.log(e)
             }
         })
-        .trim()
-        .normalizeEmail(),
+        .trim(),
+
     body('password', 'Пароль должен быть минимум 2 символов').isLength({min: 2, max: 56}).isAlphanumeric(),
     body('confirm').custom((value, {req}) => {
         // console.log(value)
@@ -33,25 +33,7 @@ exports.registerValidators = [
         .trim(),
 ]
 
-// exports.loginValidation = [
-//     body('email')
-//         .isEmail()
-//         .withMessage('введеный email должен быть минимум 2 символа и на EN')
-//         .custom(async (value, {req}) => {
-//             try {
-//                 const candidate = await User.findOne({email: value})
-//
-//
-//                 if (!candidate) {
-//                     return Promise.reject('Такой email уже занят')
-//                 }
-//             } catch (e) {
-//                 console.log(e)
-//             }
-//         })
-//         .trim()
-//         .normalizeEmail()
-// ]
+
 
 exports.courseValidators = [
     body('title').isLength({min: 3}).withMessage('Минимальная длинна названия 3 символа').trim(),
